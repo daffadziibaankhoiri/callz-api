@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
-    // 1. Index
+
     public function index(Request $request)
     {
         $tasks = Task::with(['packageCategory', 'user', 'mitra']);
@@ -24,7 +24,6 @@ class TaskController extends Controller
         return TaskResource::collection($tasks->latest()->get());
     }
 
-    // 1a. Riwayat User
     public function userHistory(Request $request)
     {
         $tasks = Task::with(['packageCategory', 'user', 'mitra', 'rating'])
@@ -35,10 +34,9 @@ class TaskController extends Controller
         return TaskResource::collection($tasks);
     }
 
-    // 1b. Riwayat Mitra
     public function mitraHistory(Request $request)
     {
-        $tasks = Task::with(['packageCategory', 'user', 'mitra'])
+        $tasks = Task::with(['packageCategory', 'user', 'mitra', 'rating']) 
             ->where('mitra_id', auth('mitra')->id())
             ->latest()
             ->get();
@@ -46,13 +44,13 @@ class TaskController extends Controller
         return TaskResource::collection($tasks);
     }
 
-    // 2. Store (User)
+
     public function store(TaskRequest $request)
     {
         $task = Task::create([
             'user_id'               => auth('user')->id(),
             'package_category_id'   => $request->package_category_id,
-            'job_category_id'       => $request->job_category_id,      // ini yang kurang
+            'job_category_id'       => $request->job_category_id,    
             'pickup_address'        => $request->pickup_address,
             'pickup_latitude'       => $request->pickup_latitude,
             'pickup_longitude'      => $request->pickup_longitude,
