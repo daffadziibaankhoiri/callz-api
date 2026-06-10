@@ -110,3 +110,11 @@ Route::get('job-categories/{id}',      [JobCategoryController::class, 'show']);
 Route::get('/docs', function () {
     return view('api-docs');
 }); 
+
+Route::get('/file/{path}', function ($path) {
+    $fullPath = storage_path('app/public/' . $path);
+    if (!file_exists($fullPath)) abort(404);
+    return response()->file($fullPath, [
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+})->where('path', '.*');
